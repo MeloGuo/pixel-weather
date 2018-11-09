@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/weather/index"
+  ],
+  "window": {
+    "navigationStyle": "default"
+  },
+  "networkTimeout": {
+    "request": 3000,
+    "connectSocket": 10000,
+    "uploadFile": 100000,
+    "downloadFile": 10000
+  },
+  "debug": false
+}
