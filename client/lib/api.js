@@ -24,12 +24,30 @@ export const geocoder = (lat, lon, success = () => {}, fail = () => {}) => {
   })
 }
 
+/**
+ * 获取和风天气
+ * @param {*} lat
+ * @param {*} lon
+ */
 export const getWeather = (lat, lon) => {
   return wx.cloud.callFunction({
     name: 'he-weather',
     data: {
       lat,
       lon
+    }
+  })
+}
+
+/**
+ * 获取和风空气质量
+ * @param {*} city
+ */
+export const getAir = (city) => {
+  return wx.cloud.callFunction({
+    name: 'he-air',
+    data: {
+      city
     }
   })
 }
