@@ -101,8 +101,22 @@ Page({
 
   },
 
-  updateLocation (result) {
-    let { latitude: lat, longitude: lon, name } = result
+  chooseLocation () {
+    wx.chooseLocation({
+      success: (res) => {
+        let { latitude, longitude } = res
+        let { lat, lon } = this.data
+        if (latitude == lat && lon == longitude) {
+          this.getWeatherData()
+        } else {
+          this.updateLocation(res)
+        }
+      }
+    })
+  },
+
+  updateLocation (res) {
+    let { latitude: lat, longitude: lon, name } = res
     let data = { lat, lon }
     if (name) {
       data.address = name
