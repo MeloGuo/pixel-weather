@@ -62,7 +62,8 @@
       "Component",
       "wx",
       "getApp",
-      "getCurrentPages"
+      "getCurrentPages",
+      "getDate"
     ],
     "ignore": [
       "/dist/"
