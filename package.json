@@ -5,9 +5,10 @@
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp watch",
     "server": "nodemon ./server/index.js",
     "dev": "gulp dev",
-    "prod": "`npm -g bin`/gulp dev --type prod",
+    "cloud": "gulp cloud:dev",
     "build": "`npm -g bin`/gulp build --type prod"
   },
   "author": "",

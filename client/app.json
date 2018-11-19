@@ -3,7 +3,7 @@
     "pages/weather/index"
   ],
   "window": {
-    "navigationStyle": "default"
+    "navigationStyle": "custom"
   },
   "networkTimeout": {
     "request": 3000,
