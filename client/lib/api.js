@@ -24,6 +24,16 @@ export const geocoder = (lat, lon, success = () => {}, fail = () => {}) => {
   })
 }
 
+export const getWeather = (lat, lon) => {
+  return wx.cloud.callFunction({
+    name: 'he-weather',
+    data: {
+      lat,
+      lon
+    }
+  })
+}
+
 export const test = (a, b) => {
   return wx.cloud.callFunction({
     name: 'test',
