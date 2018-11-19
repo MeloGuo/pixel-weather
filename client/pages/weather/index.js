@@ -1,6 +1,7 @@
 /* eslint-disable spaced-comment */
 /*<remove trigger="prod">*/
 import { test } from '../../lib/api-mock'
+import { geocoder } from '../../lib/api'
 /*</remove>*/
 
 /*<jdists trigger="prod">
@@ -39,6 +40,7 @@ Page({
 
   onLoad () {
     this.setPaddingTop()
+    this.getLocation()
   },
 
   setPaddingTop () {
@@ -48,6 +50,83 @@ Page({
           paddingTop: result.statusBarHeight + 12
         })
       }
+    })
+  },
+
+  getAddress (lat, lon, name) {
+    wx.showLoading({
+      title: '定位中',
+      mask: true
+    })
+
+    let fail = (error) => {
+      console.error(error)
+      this.setData({
+        address: name || '北京市海淀区西二旗北路'
+      })
+      wx.hideLoading()
+
+      this.getWeatherData()
+    }
+
+    geocoder(
+      lat,
+      lon,
+      (res) => {
+        wx.hideLoading()
+        let result = (res.data || {}).result
+
+        if (res.statusCode === 200 && result && result.address) {
+          let { address, formatted_addresses: formattedAddresses, address_component: addressComponent } = result
+          if (formattedAddresses && (formattedAddresses.recommend || formattedAddresses.rough)) {
+            address = formattedAddresses.recommend || formattedAddresses.rough
+          }
+          let { province, city, district: county } = addressComponent
+          this.setData({
+            province,
+            county,
+            city,
+            address: name || address
+          })
+          this.getWeatherData()
+        } else {
+          fail()
+        }
+      },
+      fail
+    )
+  },
+
+  getWeatherData () {
+
+  },
+
+  updateLocation (result) {
+    let { latitude: lat, longitude: lon, name } = result
+    let data = { lat, lon }
+    if (name) {
+      data.address = name
+    }
+    this.setData(data)
+    this.getAddress(lat, lon, name)
+  },
+
+  getLocation () {
+    wx.getLocation({
+      type: 'gcj02',
+      success: this.updateLocation,
+      fail: (error) => {
+        console.error(error)
+        this.openLocation()
+      }
+    })
+  },
+
+  openLocation () {
+    wx.showToast({
+      title: '检测到您未授权使用位置权限，请先开启哦',
+      icon: 'none',
+      duration: 3000
     })
   }
 })
