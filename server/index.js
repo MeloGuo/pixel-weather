@@ -5,6 +5,13 @@ const { PORT } = require('../config.server.json')
 
 const app = express()
 
+const callFunction = (callback, req, res, next) => {
+  callback(req.query).then(res.json.bind(res)).catch((error) => {
+    console.error(error)
+    next(error)
+  })
+}
+
 app.use(
   '/static',
   express.static(path.join(__dirname, 'static'), {
@@ -16,19 +23,19 @@ app.use(
 const test = require('./cloud-functions/test/').main
 
 app.get('/api/test', (req, res, next) => {
-  test(req.query).then(res.json.bind(res)).catch((error) => {
-    console.error(error)
-    next(error)
-  })
+  callFunction(test, req, res, next)
 })
 
 const heWeather = require('./cloud-functions/he-weather/').main
 
 app.get('/api/he-weather', (req, res, next) => {
-  heWeather(req.query).then(res.json.bind(res)).catch((error) => {
-    console.error(error)
-    next(error)
-  })
+  callFunction(heWeather, req, res, next)
+})
+
+const heAir = require('./cloud-functions/he-air').main
+
+app.get('/api/he-air', (req, res, next) => {
+  callFunction(heAir, req, res, next)
 })
 
 app.listen(PORT, () => {
