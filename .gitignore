@@ -1,8 +1,8 @@
 /.vscode
 /dist
 /node_modules
-*/.DS_Store
-/.DS_Store
+.DS_Store
+.DS_Store?
 
 # 配置文件
 config.server.json
