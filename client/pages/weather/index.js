@@ -43,6 +43,12 @@ Page({
     this.getLocation()
   },
 
+  onPullDownRefresh () {
+    this.getWeatherData(() => {
+      wx.stopPullDownRefresh()
+    })
+  },
+
   setPaddingTop () {
     wx.getSystemInfo({
       success: (result) => {
