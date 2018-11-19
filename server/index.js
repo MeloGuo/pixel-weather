@@ -22,6 +22,15 @@ app.get('/api/test', (req, res, next) => {
   })
 })
 
+const heWeather = require('./cloud-functions/he-weather/').main
+
+app.get('/api/he-weather', (req, res, next) => {
+  heWeather(req.query).then(res.json.bind(res)).catch((error) => {
+    console.error(error)
+    next(error)
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`开发服务器启动成功：http://127.0.0.1:${PORT}`)
 })
