@@ -1,13 +1,15 @@
 /* eslint-disable spaced-comment */
 /*<remove trigger="prod">*/
-import { test } from '../../lib/api-mock'
+import { getWeather, getAir } from '../../lib/api-mock'
 import { geocoder } from '../../lib/api'
 /*</remove>*/
 
 /*<jdists trigger="prod">
-import { test } from '../../lib/api'
+import { getWeather, getAir } from '../../lib/api'
 </jdists>*/
 /* eslint-disable spaced-comment */
+
+let isUpdate = false
 
 Page({
   data: {
@@ -40,13 +42,52 @@ Page({
 
   onLoad () {
     this.setPaddingTop()
-    this.getLocation()
+    this.responseQuery()
   },
 
   onPullDownRefresh () {
     this.getWeatherData(() => {
       wx.stopPullDownRefresh()
     })
+  },
+
+  onShareAppMessage () {
+    // 数据获取失败的默认情况
+    if (!isUpdate) {
+      return {
+        title: '我发现一个好玩的天气小程序，分享给你看看！',
+        path: '/pages/weather/index'
+      }
+    } else {
+      const { lat, lon, address, province, city, county } = this.data
+      let url = `/pages/weather/index?lat=${lat}&lon=${lon}&address=${address}&province=${province}&city=${city}&county=${county}`
+
+      return {
+        title: `「${address}」现在天气情况，快打开看看吧！`,
+        path: url
+      }
+    }
+  },
+
+  responseQuery () {
+    const pages = getCurrentPages()
+    const currentPage = pages[pages.length - 1]
+    const query = currentPage.options
+    if (query && query.province) {
+      let { province, city, county, address, lat, lon } = query
+      this.setData({
+        city,
+        province,
+        county,
+        address,
+        lat,
+        lon
+      }, () => {
+        this.getWeatherData()
+      })
+    } else {
+      this.getLocation()
+    }
   },
 
   setPaddingTop () {
@@ -103,8 +144,50 @@ Page({
     )
   },
 
-  getWeatherData () {
+  getWeatherData (callback) {
+    wx.showLoading({
+      title: '获取数据中',
+      mask: true
+    })
+    const getWeatherFail = (error) => {
+      wx.hideLoading()
+      console.error(error)
+      if (typeof callback === 'function') {
+        callback()
+      }
+      wx.showToast({
+        title: '加载失败，请稍后再试',
+        icon: 'none',
+        duration: 3000
+      })
+    }
+    const { lat, lon, province, city, county } = this.data
 
+    getWeather(lat, lon).then((res) => {
+      wx.hideLoading()
+      if (typeof callback === 'function') {
+        callback()
+      }
+      if (res.result) {
+        this.render(res.result)
+      } else {
+        getWeatherFail()
+      }
+    }).catch(getWeatherFail)
+
+    getAir(city).then((res) => {
+      if (res && res.result) {
+        this.setData({
+          air: res.result
+        })
+      }
+    }).catch((error) => {
+      console.error(error)
+    })
+  },
+
+  render (data) {
+    console.log(data)
   },
 
   chooseLocation () {
