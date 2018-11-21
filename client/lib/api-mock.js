@@ -16,13 +16,13 @@ const callFunction = (url, data) => {
 }
 
 export const getWeather = (lat, lon) => {
-  callFunction('/he-weather', { lat, lon })
+  return callFunction('/he-weather', { lat, lon })
 }
 
 export const getAir = (city) => {
-  callFunction('/he-air', { city })
+  return callFunction('/he-air', { city })
 }
 
 export const test = (a, b) => {
-  callFunction('/test', { a, b })
+  return callFunction('/test', { a, b })
 }
