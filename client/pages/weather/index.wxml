@@ -13,7 +13,7 @@
         <text>{{ address }}</text>
       </view>
       <view class="air-quality" wx:if="{{ air.aqi }}">
-        <text class="circle" style="{{ air.aqi }}"></text>
+        <text class="circle" style="background-color: {{ air.color }};"></text>
         <text class="value">{{ air.name }} {{ air.aqi }}</text>
       </view>
       <view class="now-weather">
