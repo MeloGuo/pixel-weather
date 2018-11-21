@@ -11,6 +11,14 @@ import { getWeather, getAir } from '../../lib/api'
 
 let isUpdate = false
 
+class DayWeahter {
+  constructor (daily) {
+    this.temp = `${daily.minTemp}/${daily.maxTemp}`
+    this.icon = daily.dayIcon
+    this.weather = daily.day
+  }
+}
+
 Page({
   data: {
     statusBarHeight: 32,
@@ -188,6 +196,24 @@ Page({
 
   render (data) {
     console.log(data)
+    isUpdate = true
+    const { hourly, daily, current, oneWord = '', lifeStyle } = data
+    const { backgroundColor, backgroundImage } = current
+
+    const today = new DayWeahter(daily[0])
+    const tomorrow = new DayWeahter(daily[1])
+
+    this.setData({
+      hourlyData: hourly,
+      weeklyData: daily,
+      current,
+      today,
+      tomorrow,
+      backgroundColor,
+      backgroundImage,
+      oneWord,
+      lifeStyle
+    })
   },
 
   chooseLocation () {

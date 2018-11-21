@@ -78,19 +78,21 @@
       <view class="week">
         <!-- 七天天气 -->
         <view class="week-weather">
-          <view class="day">{{ utils.formatWeeklyDate(index) }}</view>
-          <view class="date">{{ utils.formatDate(item.time) }}</view>
-          <view class="daytime">
-            <view class="wt">{{ item.day }}</view>
-            <icon type="{{ item.dayIcon }}" class="img"></icon>
+          <view class="item" wx:for="{{ weeklyData }}">
+            <view class="day">{{ utils.formatWeeklyDate(index) }}</view>
+            <view class="date">{{ utils.formatDate(item.time) }}</view>
+            <view class="daytime">
+              <view class="wt">{{ item.day }}</view>
+              <icon type="{{ item.dayIcon }}" class="img"></icon>
+            </view>
+            <view class="night">
+              <icon type="{{ item.nightIcon }}" class="img"></icon>
+              <view class="wt">{{ item.night }}</view>
+            </view>
+            <view class="wind">{{ utils.wind(item.nightWind) }}</view>
+            <view class="wind" wx:if="{{ item.nightWind }}">{{ utils.windLevel(item.nightWindLevel) }}</view>
+            <view class="wind" wx:else></view>
           </view>
-          <view class="night">
-            <icon type="{{ item.nightIcon }}" class="img"></icon>
-            <view class="wt">{{ item.night }}</view>
-          </view>
-          <view class="wind">{{ utils.wind(item.nightWind) }}</view>
-          <view class="wind" wx:if="{{ item.nightWind }}">{{ utils.windLevel(item.nightWindLevel) }}</view>
-          <view class="wind" wx:else></view>
         </view>
       </view>
     </view>
@@ -105,5 +107,9 @@
         </view>
       </view>
     </view>
+  </view>
+  <view class="source">
+    <text wx:if="{{ oneWord === '' }}">· 隔壁的薯片卖半价啦！</text>
+    <text wx:else>{{ oneWord }}</text>
   </view>
 </view>
