@@ -394,7 +394,7 @@ const $ = {
 
     return weekly
   },
-  handleData (data) {
+  handlerData (data) {
     if (data && data.HeWeather6 && data.HeWeather6[0].now) {
       let result = data.HeWeather6[0]
       let { now, daily_forecast: dailyForecast, lifestyle, hourly = [] } = result
